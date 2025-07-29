@@ -22,13 +22,15 @@ stop()
 
 rm /etc/exports
 
+OTHER_OPTIONS=${OTHER_OPTIONS:-no_subtree_check,no_auth_nlm,insecure,no_root_squash}
+
 # Check if the SHARED_DIRECTORY variable is empty
 if [ -z "${SHARED_DIRECTORY}" ]; then
   echo "The SHARED_DIRECTORY environment variable is unset or null, exiting..."
   exit 1
 else
   echo "Writing SHARED_DIRECTORY to /etc/exports file"
-  echo "{{SHARED_DIRECTORY}} {{PERMITTED}}({{READ_ONLY}},fsid=0,{{SYNC}},no_subtree_check,no_auth_nlm,insecure,no_root_squash)" >> /etc/exports
+  echo "{{SHARED_DIRECTORY}} {{PERMITTED}}({{READ_ONLY}},fsid=0,{{SYNC}},${OTHER_OPTIONS})" >> /etc/exports
   /bin/sed -i "s@{{SHARED_DIRECTORY}}@${SHARED_DIRECTORY}@g" /etc/exports
 fi
 
@@ -40,9 +42,17 @@ fi
 # Check if the SHARED_DIRECTORY_2 variable is empty
 if [ ! -z "${SHARED_DIRECTORY_2}" ]; then
   echo "Writing SHARED_DIRECTORY_2 to /etc/exports file"
-  echo "{{SHARED_DIRECTORY_2}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},no_subtree_check,no_auth_nlm,insecure,no_root_squash)" >> /etc/exports
+  echo "{{SHARED_DIRECTORY_2}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},${OTHER_OPTIONS})" >> /etc/exports
   /bin/sed -i "s@{{SHARED_DIRECTORY_2}}@${SHARED_DIRECTORY_2}@g" /etc/exports
 fi
+
+# Check if the SHARED_DIRECTORY_3 variable is empty
+if [ ! -z "${SHARED_DIRECTORY_3}" ]; then
+  echo "Writing SHARED_DIRECTORY_3 to /etc/exports file"
+  echo "{{SHARED_DIRECTORY_3}} {{PERMITTED}}({{READ_ONLY}},{{SYNC}},${OTHER_OPTIONS})" >> /etc/exports
+  /bin/sed -i "s@{{SHARED_DIRECTORY_3}}@${SHARED_DIRECTORY_3}@g" /etc/exports
+fi
+
 
 # Check if the PERMITTED variable is empty
 if [ -z "${PERMITTED}" ]; then
